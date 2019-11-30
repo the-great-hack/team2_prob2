@@ -1,3 +1,5 @@
+import 'core-js/features/array/flat-map';
+
 import cors from 'cors';
 import express from 'express';
 import graph from 'src/algorithms/dijkstra';
@@ -151,7 +153,10 @@ app.get('/api/paths', (req, res) => {
         .send('Location does not exist');
     }
   } else {
-    res.status(422).send();
+    res
+      .status(422)
+      .type('txt')
+      .send('Start and end location not provided');
   }
 });
 
