@@ -142,7 +142,7 @@ app.get('/api/paths', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  const stream = fs.readFileSync(path.resolve(__dirname, 'index.html'));
+  const stream = fs.readFileSync(path.resolve(__dirname, 'web', 'index.html'));
   res.type('text/html').send(stream);
 });
 
