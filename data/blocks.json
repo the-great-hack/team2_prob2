@@ -8,25 +8,25 @@
     },
     {
       "name": "B",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 12, "lanes": 3, "busAllowed": true },
       "lat": 0,
       "lng": 1
     },
     {
       "name": "C",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 14, "lanes": 3, "busAllowed": true },
       "lat": 0,
       "lng": 2
     },
     {
       "name": "D",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 8, "lanes": 2, "busAllowed": true },
       "lat": 0,
       "lng": 3
     },
     {
       "name": "E",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 12, "lanes": 2, "busAllowed": true },
       "lat": 0,
       "lng": 4
     }
@@ -34,31 +34,31 @@
   [
     {
       "name": "F",
-      "stats": { "carCount": 10, "lanes": 1, "busAllowed": true },
+      "stats": { "carCount": 15, "lanes": 2, "busAllowed": true },
       "lat": 1,
       "lng": 0
     },
     {
       "name": "G",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 17, "lanes": 3, "busAllowed": false },
       "lat": 1,
       "lng": 1
     },
     {
       "name": "H",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 13, "lanes": 3, "busAllowed": true },
       "lat": 1,
       "lng": 2
     },
     {
       "name": "I",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 11, "lanes": 3, "busAllowed": true },
       "lat": 1,
       "lng": 3
     },
     {
       "name": "J",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 12, "lanes": 2, "busAllowed": true },
       "lat": 1,
       "lng": 4
     }
@@ -66,31 +66,31 @@
   [
     {
       "name": "K",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 9, "lanes": 2, "busAllowed": true },
       "lat": 2,
       "lng": 0
     },
     {
       "name": "L",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 5, "lanes": 3, "busAllowed": true },
       "lat": 2,
       "lng": 1
     },
     {
       "name": "M",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 10, "lanes": 4, "busAllowed": true },
       "lat": 2,
       "lng": 2
     },
     {
       "name": "N",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 15, "lanes": 4, "busAllowed": true },
       "lat": 2,
       "lng": 3
     },
     {
       "name": "O",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 9, "lanes": 2, "busAllowed": true },
       "lat": 2,
       "lng": 4
     }
@@ -98,31 +98,31 @@
   [
     {
       "name": "P",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 8, "lanes": 3, "busAllowed": true },
       "lat": 3,
       "lng": 0
     },
     {
       "name": "Q",
-      "stats": { "carCount": 15, "lanes": 1, "busAllowed": true },
+      "stats": { "carCount": 12, "lanes": 4, "busAllowed": true },
       "lat": 3,
       "lng": 1
     },
     {
       "name": "R",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 17, "lanes": 4, "busAllowed": true },
       "lat": 3,
       "lng": 2
     },
     {
       "name": "S",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 11, "lanes": 4, "busAllowed": false },
       "lat": 3,
       "lng": 3
     },
     {
       "name": "T",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 15, "lanes": 3, "busAllowed": false },
       "lat": 3,
       "lng": 4
     }
@@ -130,31 +130,31 @@
   [
     {
       "name": "U",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 9, "lanes": 3, "busAllowed": true },
       "lat": 4,
       "lng": 0
     },
     {
       "name": "V",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 11, "lanes": 4, "busAllowed": true },
       "lat": 4,
       "lng": 1
     },
     {
       "name": "W",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 13, "lanes": 4, "busAllowed": true },
       "lat": 4,
       "lng": 2
     },
     {
       "name": "X",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 13, "lanes": 3, "busAllowed": true },
       "lat": 4,
       "lng": 3
     },
     {
       "name": "Y",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 15, "lanes": 2, "busAllowed": false },
       "lat": 4,
       "lng": 4
     }

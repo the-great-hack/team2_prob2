@@ -2,11 +2,6 @@ import cors from 'cors';
 import express from 'express';
 import graph from 'node-dijkstra';
 
-import Dijkstra from './src/algorithms/graphs/dijkstra';
-import Graph from './src/data-structures/graph';
-import Vertex from './src/data-structures/graph/vertex';
-import Edge from './src/data-structures/graph/edge';
-
 import blocksData from 'data/blocks.json';
 import transports from 'data/transports.json';
 
@@ -38,7 +33,7 @@ const calculateViscosity = (lanes, carCount, busAllowed = true) => {
   }
 
   if (!busAllowed) {
-    viscosity += 1;
+    viscosity += transports[0][2];
   }
 
   return viscosity;
@@ -92,20 +87,15 @@ g.addVertex('Y', {});
 //   g.addEdge(new Edge(srcVertex, destVertex, weight));
 // };
 
-// const getDistance = (x1, y1, x2, y2) =>
-//   Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));
-
-// const getRandomNumber = (min = 0, max = 10) =>
-//   Math.random() * (max - min) + min;
-
 const getPaths = (start, end) => {
-  return g.shortestPath(start, end).map(name => {
+  const paths = g.shortestPath(start, end).map(name => {
     const block = blocks.flatMap(b => b).find(b => b.name === name);
     let mode;
 
     for (let transport of transports) {
-      if (transport[0] >= block.viscosity && transport[1] < block.viscosity) {
+      if (transport[0] >= block.viscosity && block.viscosity < transport[1]) {
         mode = transport[3];
+        break;
       }
     }
 
@@ -115,6 +105,36 @@ const getPaths = (start, end) => {
 
     return { name: block.name, mode };
   });
+
+  let reducedPaths = paths.length
+    ? [
+        {
+          src: paths[0].name,
+          dest: paths[0].name,
+          mode: paths[0].mode,
+        },
+      ]
+    : [];
+
+  for (let i = 1; i < paths.length; i += 1) {
+    if (paths[i].mode !== reducedPaths[reducedPaths.length - 1].mode) {
+      reducedPaths = [
+        ...reducedPaths,
+        {
+          src: paths[i].name,
+          dest: paths[i].name,
+          mode: paths[i].mode,
+        },
+      ];
+    } else if (paths[i + 1] && paths[i].mode !== paths[i + 1].mode) {
+      reducedPaths[reducedPaths.length - 1] = {
+        ...reducedPaths[reducedPaths.length - 1],
+        dest: paths[i].name,
+      };
+    }
+  }
+
+  return reducedPaths;
 };
 
 app.get('/api/locations', (req, res) =>
@@ -125,7 +145,17 @@ app.get('/api/paths', (req, res) => {
   const { start, end } = req.query;
 
   if (start && end) {
-    res.send(getPaths(start, end));
+    const startLocation = blocks.flatMap(p => p).find(p => p.name === start);
+    const endLocation = blocks.flatMap(p => p).find(p => p.name === end);
+
+    if (startLocation && endLocation) {
+      res.send(getPaths(start, end));
+    } else {
+      res
+        .status(404)
+        .type('txt')
+        .send('Location does not exist');
+    }
   } else {
     res.status(422).send();
   }
