@@ -1,6 +1,6 @@
 import assign from '101/assign';
 
-import PriorityQueue from '../data-structures/priority-queue';
+import PriorityQueue from 'src/data-structures/priority-queue';
 
 // costruct
 const Graph = function(vertices) {

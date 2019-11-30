@@ -1,7 +1,9 @@
 import 'regenerator-runtime/runtime';
 import 'core-js/features/array/flat-map';
 
+import fs from 'fs';
 import cors from 'cors';
+import path from 'path';
 import express from 'express';
 import Graph from 'src/algorithms/dijkstra';
 import { calculateViscosity } from 'src/utils';
@@ -139,6 +141,11 @@ app.get('/api/paths', async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  const stream = fs.readFileSync(path.resolve(__dirname, 'index.html'));
+  res.type('text/html').send(stream);
+});
+
 app.use((req, res) =>
   res
     .status(404)
@@ -149,7 +156,7 @@ app.use((req, res) =>
 const bootstrap = async () => {
   app.listen(port, () =>
     console.log(
-      `server running at http://localhost:${port} in "${process.env.NODE_ENV}" mode`
+      `🚀  Server running at http://localhost:${port} in "${process.env.NODE_ENV}" mode`
     )
   );
 };
