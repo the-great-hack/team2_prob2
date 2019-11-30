@@ -76,7 +76,7 @@ const getShortestPath = async (start, end) =>
     return { name: block.name, mode };
   });
 
-const getPaths = async (start, end) => {
+const getPathModes = async (start, end) => {
   const paths = await getShortestPath(start, end);
 
   let reducedPaths = paths.length
@@ -125,7 +125,7 @@ app.get('/api/paths', async (req, res) => {
     const endLocation = blocks.flatMap(p => p).find(p => p.name === end);
 
     if (startLocation && endLocation) {
-      const results = await getPaths(start, end);
+      const results = await getPathModes(start, end);
       res.send(results);
     } else {
       res
