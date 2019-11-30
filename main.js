@@ -8,7 +8,8 @@ import express from 'express';
 import Graph from 'src/algorithms/dijkstra';
 import { calculateViscosity } from 'src/utils';
 
-import blocksData from 'data/blocks.json';
+// load data from sources
+import blocks from 'data/blocks.json';
 import transports from 'data/transports.json';
 
 const port = process.env.PORT || 3000;
@@ -16,45 +17,33 @@ const app = express();
 app.disable('x-powered-by');
 app.use(cors());
 
-// load data from source
-const blocks = blocksData.map(val1 =>
-  val1.map(val2 => ({
-    ...val2,
-    viscosity: calculateViscosity(
-      transports,
-      val2.stats.lanes,
-      val2.stats.carCount,
-      val2.stats.busAllowed
-    ),
-  }))
-);
-
 const graph = new Graph();
-graph.addVertex('A', { B: 1, F: 2 });
-graph.addVertex('B', { G: 3, C: 1 });
-graph.addVertex('C', { H: 5, D: 9 });
-graph.addVertex('D', { I: 8, E: 3 });
-graph.addVertex('E', { I: 2 });
-graph.addVertex('F', { G: 1, K: 4 });
-graph.addVertex('G', { H: 6, L: 5 });
-graph.addVertex('H', { I: 7, M: 9 });
-graph.addVertex('I', { J: 4, N: 2 });
-graph.addVertex('J', { O: 5 });
-graph.addVertex('K', { L: 2 }, { P: 5 });
-graph.addVertex('L', { Q: 7 }, { M: 3 });
-graph.addVertex('M', { N: 5 }, { R: 9 });
-graph.addVertex('N', { S: 1 }, { O: 8 });
-graph.addVertex('O', { T: 8 });
-graph.addVertex('P', { Q: 1 }, { U: 5 });
-graph.addVertex('Q', { R: 6 }, { V: 2 });
-graph.addVertex('R', { S: 4 }, { W: 3 });
-graph.addVertex('S', { T: 4 }, { X: 2 });
-graph.addVertex('T', { Y: 2 });
-graph.addVertex('U', { V: 4 });
-graph.addVertex('V', { W: 5 });
-graph.addVertex('W', { X: 3 });
-graph.addVertex('X', { Y: 2 });
-graph.addVertex('Y', {});
+const flatBlocks = blocks.flatMap(b => b);
+
+// transform data and feed it to the graph service
+for (let i = 0, len = blocks[0].length; i < flatBlocks.length; i += 1) {
+  const obj = {};
+
+  if (flatBlocks[i + 1] && (i + 1) % len !== 0) {
+    obj[flatBlocks[i + 1].name] = calculateViscosity(
+      transports,
+      flatBlocks[i].lanes,
+      flatBlocks[i].stats.carCount,
+      flatBlocks[i].stats.busAllowed
+    );
+  }
+
+  if (flatBlocks[i + len]) {
+    obj[flatBlocks[i + len].name] = calculateViscosity(
+      transports,
+      flatBlocks[i].lanes,
+      flatBlocks[i].stats.carCount,
+      flatBlocks[i].stats.busAllowed
+    );
+  }
+
+  graph.addVertex(flatBlocks[i].name, obj);
+}
 
 const getShortestPath = async (start, end) =>
   graph.shortestPath(start, end).map(name => {
@@ -114,16 +103,14 @@ const getPathModes = async (start, end) => {
   return reducedPaths;
 };
 
-app.get('/api/locations', (req, res) =>
-  res.send(blocks.flatMap(p => p).map(p => p.name))
-);
+app.get('/api/locations', (req, res) => res.send(flatBlocks.map(p => p.name)));
 
 app.get('/api/rides', async (req, res) => {
   const { start, end } = req.query;
 
   if (start && end) {
-    const startLocation = blocks.flatMap(p => p).find(p => p.name === start);
-    const endLocation = blocks.flatMap(p => p).find(p => p.name === end);
+    const startLocation = flatBlocks.find(p => p.name === start);
+    const endLocation = flatBlocks.find(p => p.name === end);
 
     if (startLocation && endLocation) {
       const results = await getPathModes(start, end);
