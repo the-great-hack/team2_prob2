@@ -83,125 +83,23 @@ g.addVertex('W', {});
 g.addVertex('X', {});
 g.addVertex('Y', {});
 
-// for (let i = 0; i < blocks.length; i++) {
-//   for (const j in blocks[i]) {
-//     let obj = {};
+// const addEdge = (start, end, weight) => {
+//   const srcVertex = g.getVertexByKey(start) || new Vertex(start);
+//   const destVertex = g.getVertexByKey(end) || new Vertex(end);
 
-//     if (blocks[i + 1] && blocks[i + 1][j]) {
-//       obj[blocks[i + 1][j].name] = blocks[i][j].viscosity;
-//     }
+//   console.log(start, ' -> ', end, `(${weight})`);
 
-//     if (blocks[i][j + 1]) {
-//       obj[blocks[i][j + 1].name] = blocks[i][j + 1].viscosity;
-//     }
+//   g.addEdge(new Edge(srcVertex, destVertex, weight));
+// };
 
-//     g1.addVertex(blocks[i][j].name, obj);
-//   }
-// }
+// const getDistance = (x1, y1, x2, y2) =>
+//   Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));
 
-// const g = new Graph();
+// const getRandomNumber = (min = 0, max = 10) =>
+//   Math.random() * (max - min) + min;
 
-// const startVertex = new Vertex('A');
-// const vertexB = new Vertex('B');
-// const vertexC = new Vertex('C');
-// const vertexD = new Vertex('D');
-// const vertexE = new Vertex('E');
-// const vertexF = new Vertex('F');
-// const vertexG = new Vertex('G');
-// const vertexH = new Vertex('H');
-// const vertexI = new Vertex('I');
-// const vertexJ = new Vertex('J');
-// const vertexK = new Vertex('K');
-// const vertexL = new Vertex('L');
-// const vertexM = new Vertex('M');
-// const vertexN = new Vertex('N');
-// const vertexO = new Vertex('O');
-// const vertexP = new Vertex('P');
-// const vertexQ = new Vertex('Q');
-// const vertexR = new Vertex('R');
-// const vertexS = new Vertex('S');
-// const vertexT = new Vertex('T');
-// const vertexU = new Vertex('U');
-// const vertexV = new Vertex('V');
-// const vertexW = new Vertex('W');
-// const vertexX = new Vertex('X');
-// const vertexY = new Vertex('Y');
-// g.addEdge(new Edge(startVertex, vertexB, 10));
-// g.addEdge(new Edge(startVertex, vertexF, 10));
-// g.addEdge(new Edge(vertexB, vertexC, 10));
-// g.addEdge(new Edge(vertexB, vertexG, 10));
-// g.addEdge(new Edge(vertexC, vertexD, 10));
-// g.addEdge(new Edge(vertexC, vertexH, 10));
-// g.addEdge(new Edge(vertexD, vertexE, 10));
-// g.addEdge(new Edge(vertexD, vertexI, 10));
-// g.addEdge(new Edge(vertexE, vertexJ, 10));
-// g.addEdge(new Edge(vertexF, vertexG, 10));
-// g.addEdge(new Edge(vertexF, vertexK, 10));
-// g.addEdge(new Edge(vertexG, vertexH, 10));
-// g.addEdge(new Edge(vertexG, vertexL, 10));
-// g.addEdge(new Edge(vertexH, vertexI, 10));
-// g.addEdge(new Edge(vertexH, vertexM, 10));
-// g.addEdge(new Edge(vertexI, vertexJ, 10));
-// g.addEdge(new Edge(vertexI, vertexN, 10));
-// g.addEdge(new Edge(vertexJ, vertexO, 10));
-
-const addEdge = (start, end, weight) => {
-  const srcVertex = g.getVertexByKey(start) || new Vertex(start);
-  const destVertex = g.getVertexByKey(end) || new Vertex(end);
-
-  console.log(start, ' -> ', end, `(${weight})`);
-
-  g.addEdge(new Edge(srcVertex, destVertex, weight));
-};
-
-// for (let i = 0; i < blocks.length; i++) {
-//   for (const j in blocks[i]) {
-//     try {
-//       if (i === 0 && j === 0) {
-//         if (blocks[i + 1][j]) {
-//           g.addEdge(
-//             new Edge(
-//               startVertex,
-//               new Vertex(blocks[i + 1][j].name),
-//               blocks[i][j].viscosity
-//             )
-//           );
-//         }
-
-//         if (blocks[i][j + 1]) {
-//           g.addEdge(
-//             new Edge(
-//               startVertex,
-//               new Vertex(blocks[i][j + 1].name),
-//               blocks[i][j].viscosity
-//             )
-//           );
-//         }
-//       } else if (blocks[i][j + 1]) {
-//         addEdge(
-//           blocks[i][j].name,
-//           blocks[i][j + 1].name,
-//           blocks[i][j].viscosity
-//         );
-//       } else if (blocks[i + 1][j]) {
-//         addEdge(
-//           blocks[i][j].name,
-//           blocks[i + 1][j].name,
-//           blocks[i][j].viscosity
-//         );
-//       }
-//     } catch {}
-//   }
-// }
-
-const getDistance = (x1, y1, x2, y2) =>
-  Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));
-
-const getRandomNumber = (min = 0, max = 10) =>
-  Math.random() * (max - min) + min;
-
-const bookRide = (start, end) => {
-  const path = g.shortestPath(start, end).map(name => {
+const getPaths = (start, end) => {
+  return g.shortestPath(start, end).map(name => {
     const block = blocks.flatMap(b => b).find(b => b.name === name);
     let mode;
 
@@ -217,12 +115,20 @@ const bookRide = (start, end) => {
 
     return { name: block.name, mode };
   });
-
-  console.log(path);
 };
 
-app.get('/api/locations', (req, res) => {
-  res.send(blocks.flatMap(p => p).map(p => p.name));
+app.get('/api/locations', (req, res) =>
+  res.send(blocks.flatMap(p => p).map(p => p.name))
+);
+
+app.get('/api/paths', (req, res) => {
+  const { start, end } = req.query;
+
+  if (start && end) {
+    res.send(getPaths(start, end));
+  } else {
+    res.status(422).send();
+  }
 });
 
 app.use((req, res) =>
@@ -232,8 +138,8 @@ app.use((req, res) =>
     .send(`Cannot ${req.method} ${req.path}`)
 );
 
-app.listen(3000, () => {
-  console.log('server listening on http://localhost:3000');
-});
-
-// bookRide('A', 'Y');
+app.listen(3000, () =>
+  console.log(
+    `server running at http://localhost:3000 in "${process.env.NODE_ENV}" mode`
+  )
+);
