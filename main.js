@@ -30,7 +30,6 @@ const blocks = blocksData.map(val1 =>
 );
 
 const graph = new Graph();
-
 graph.addVertex('A', { B: 1, F: 2 });
 graph.addVertex('B', { G: 3, C: 1 });
 graph.addVertex('C', { H: 5, D: 9 });
@@ -78,35 +77,37 @@ const getShortestPath = async (start, end) =>
 
 const getPathModes = async (start, end) => {
   const paths = await getShortestPath(start, end);
-
-  let reducedPaths = paths.length
+  const reducedPaths = paths.length
     ? [
         {
           src: paths[0].name,
           dest: paths[0].name,
           mode: paths[0].mode,
+          routes: [paths[0].name],
+          distance: 1,
         },
       ]
     : [];
 
   for (let i = 1; i < paths.length; i += 1) {
-    if (paths[i].mode !== reducedPaths[reducedPaths.length - 1].mode) {
-      reducedPaths = [
-        ...reducedPaths,
-        {
-          src: paths[i].name,
-          dest: paths[i].name,
-          mode: paths[i].mode,
-        },
-      ];
-    } else if (
-      (paths[i + 1] && paths[i].mode !== paths[i + 1].mode) ||
-      !paths[i + 1]
-    ) {
+    if (reducedPaths[reducedPaths.length - 1].mode === paths[i].mode) {
       reducedPaths[reducedPaths.length - 1] = {
         ...reducedPaths[reducedPaths.length - 1],
         dest: paths[i].name,
+        routes: [
+          ...reducedPaths[reducedPaths.length - 1].routes,
+          paths[i].name,
+        ],
+        distance: reducedPaths[reducedPaths.length - 1].distance + 1,
       };
+    } else {
+      reducedPaths.push({
+        src: paths[i].name,
+        dest: paths[i].name,
+        mode: paths[i].mode,
+        routes: [paths[i].name],
+        distance: 1,
+      });
     }
   }
 
