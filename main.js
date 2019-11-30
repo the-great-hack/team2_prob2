@@ -118,7 +118,7 @@ app.get('/api/locations', (req, res) =>
   res.send(blocks.flatMap(p => p).map(p => p.name))
 );
 
-app.get('/api/paths', async (req, res) => {
+app.get('/api/rides', async (req, res) => {
   const { start, end } = req.query;
 
   if (start && end) {
