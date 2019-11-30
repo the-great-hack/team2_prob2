@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import graph from 'node-dijkstra';
+import graph from 'src/algorithms/dijkstra';
 
 import blocksData from 'data/blocks.json';
 import transports from 'data/transports.json';
@@ -78,15 +78,6 @@ g.addVertex('W', {});
 g.addVertex('X', {});
 g.addVertex('Y', {});
 
-// const addEdge = (start, end, weight) => {
-//   const srcVertex = g.getVertexByKey(start) || new Vertex(start);
-//   const destVertex = g.getVertexByKey(end) || new Vertex(end);
-
-//   console.log(start, ' -> ', end, `(${weight})`);
-
-//   g.addEdge(new Edge(srcVertex, destVertex, weight));
-// };
-
 const getPaths = (start, end) => {
   const paths = g.shortestPath(start, end).map(name => {
     const block = blocks.flatMap(b => b).find(b => b.name === name);
@@ -126,7 +117,10 @@ const getPaths = (start, end) => {
           mode: paths[i].mode,
         },
       ];
-    } else if (paths[i + 1] && paths[i].mode !== paths[i + 1].mode) {
+    } else if (
+      (paths[i + 1] && paths[i].mode !== paths[i + 1].mode) ||
+      !paths[i + 1]
+    ) {
       reducedPaths[reducedPaths.length - 1] = {
         ...reducedPaths[reducedPaths.length - 1],
         dest: paths[i].name,
