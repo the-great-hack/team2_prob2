@@ -6,7 +6,7 @@ COPY package.json ./
 COPY yarn.lock ./
 RUN yarn
 
-COPY .env ./
+COPY data ./data
 COPY dist ./dist
 
-CMD ["node", "dist/main.js"]
+CMD ["yarn", "start"]

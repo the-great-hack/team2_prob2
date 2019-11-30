@@ -51,10 +51,10 @@ graph.addVertex('Q', { R: 6 }, { V: 2 });
 graph.addVertex('R', { S: 4 }, { W: 3 });
 graph.addVertex('S', { T: 4 }, { X: 2 });
 graph.addVertex('T', { Y: 2 });
-graph.addVertex('U', {});
-graph.addVertex('V', {});
-graph.addVertex('W', {});
-graph.addVertex('X', {});
+graph.addVertex('U', { V: 4 });
+graph.addVertex('V', { W: 5 });
+graph.addVertex('W', { X: 3 });
+graph.addVertex('X', { Y: 2 });
 graph.addVertex('Y', {});
 
 const getShortestPath = async (start, end) =>
