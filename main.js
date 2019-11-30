@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import 'core-js/features/array/flat-map';
 
 import cors from 'cors';
@@ -8,18 +9,20 @@ import { calculateViscosity } from 'src/utils';
 import blocksData from 'data/blocks.json';
 import transports from 'data/transports.json';
 
+const port = process.env.PORT || 3000;
 const app = express();
 app.disable('x-powered-by');
 app.use(cors());
 
-const blocks = blocksData.map(v1 =>
-  v1.map(v2 => ({
-    ...v2,
+// load data from source
+const blocks = blocksData.map(val1 =>
+  val1.map(val2 => ({
+    ...val2,
     viscosity: calculateViscosity(
       transports,
-      v2.stats.lanes,
-      v2.stats.carCount,
-      v2.stats.busAllowed
+      val2.stats.lanes,
+      val2.stats.carCount,
+      val2.stats.busAllowed
     ),
   }))
 );
@@ -52,8 +55,8 @@ graph.addVertex('W', {});
 graph.addVertex('X', {});
 graph.addVertex('Y', {});
 
-const getPaths = (start, end) => {
-  const paths = graph.shortestPath(start, end).map(name => {
+const getShortestPath = async (start, end) =>
+  graph.shortestPath(start, end).map(name => {
     const block = blocks.flatMap(b => b).find(b => b.name === name);
     let mode;
 
@@ -70,6 +73,9 @@ const getPaths = (start, end) => {
 
     return { name: block.name, mode };
   });
+
+const getPaths = async (start, end) => {
+  const paths = await getShortestPath(start, end);
 
   let reducedPaths = paths.length
     ? [
@@ -109,7 +115,7 @@ app.get('/api/locations', (req, res) =>
   res.send(blocks.flatMap(p => p).map(p => p.name))
 );
 
-app.get('/api/paths', (req, res) => {
+app.get('/api/paths', async (req, res) => {
   const { start, end } = req.query;
 
   if (start && end) {
@@ -117,7 +123,8 @@ app.get('/api/paths', (req, res) => {
     const endLocation = blocks.flatMap(p => p).find(p => p.name === end);
 
     if (startLocation && endLocation) {
-      res.send(getPaths(start, end));
+      const results = await getPaths(start, end);
+      res.send(results);
     } else {
       res
         .status(404)
@@ -139,8 +146,13 @@ app.use((req, res) =>
     .send(`Cannot ${req.method} ${req.path}`)
 );
 
-app.listen(3000, () =>
-  console.log(
-    `server running at http://localhost:3000 in "${process.env.NODE_ENV}" mode`
-  )
-);
+const bootstrap = async () => {
+  app.listen(port, () =>
+    console.log(
+      `server running at http://localhost:${port} in "${process.env.NODE_ENV}" mode`
+    )
+  );
+};
+
+// start the app server
+bootstrap();
