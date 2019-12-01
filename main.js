@@ -48,6 +48,7 @@ for (let i = 0, len = blocks[0].length; i < flatBlocks.length; i += 1) {
   graph.addVertex(flatBlocks[i].name, obj);
 }
 
+// get shortest distance between two points
 const getShortestPath = async (start, end) =>
   graph.shortestPath(start, end).map(name => {
     const block = blocks.flatMap(b => b).find(b => b.name === name);
@@ -67,6 +68,7 @@ const getShortestPath = async (start, end) =>
     return { name: block.name, mode };
   });
 
+// decide which transport mode to assign w.r.t traffic flow
 const getPathModes = async (start, end) => {
   const paths = await getShortestPath(start, end);
   const reducedPaths = paths.length
@@ -109,26 +111,33 @@ const getPathModes = async (start, end) => {
 app.get('/api/locations', (req, res) => res.send(flatBlocks.map(p => p.name)));
 
 app.get('/api/rides', async (req, res) => {
-  const { start, end } = req.query;
+  try {
+    const { start, end } = req.query;
 
-  if (start && end) {
-    const startLocation = flatBlocks.find(p => p.name === start);
-    const endLocation = flatBlocks.find(p => p.name === end);
+    if (start && end) {
+      const startLocation = flatBlocks.find(p => p.name === start);
+      const endLocation = flatBlocks.find(p => p.name === end);
 
-    if (startLocation && endLocation) {
-      const results = await getPathModes(start, end);
-      res.send(results);
+      if (startLocation && endLocation) {
+        const results = await getPathModes(start, end);
+        res.send(results);
+      } else {
+        res
+          .status(404)
+          .type('txt')
+          .send('Location does not exist');
+      }
     } else {
       res
-        .status(404)
+        .status(422)
         .type('txt')
-        .send('Location does not exist');
+        .send('Start and end location not provided');
     }
-  } else {
+  } catch (err) {
     res
-      .status(422)
+      .status(500)
       .type('txt')
-      .send('Start and end location not provided');
+      .send(err.message);
   }
 });
 
