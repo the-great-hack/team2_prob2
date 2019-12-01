@@ -43,7 +43,7 @@ docker build -t the-great-hack-careem .
 docker run -p 3000:3000 the-great-hack-careem
 ```
 
-If everything goes well, the project can be viewed at [http://localhost:3000](http://localhost:3000)
+If everything goes well, the API routes can be accessed at [http://localhost:3000/api/locations](http://localhost:3000/api/locations) and [http://localhost:3000/api/rides](http://localhost:3000/api/rides)
 
 ## Technologies
 
