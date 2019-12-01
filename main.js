@@ -8,7 +8,7 @@ import express from 'express';
 import Graph from 'src/algorithms/dijkstra';
 import { calculateViscosity } from 'src/utils';
 
-// load data from sources
+// load data from sources into memory
 import blocksData from 'data/blocks.json';
 import transports from 'data/transports.json';
 
@@ -108,7 +108,16 @@ const getPathModes = async (start, end) => {
   return reducedPaths;
 };
 
-app.get('/api/locations', (req, res) => res.send(flatBlocks.map(p => p.name)));
+app.get('/api/locations', (req, res) => {
+  try {
+    res.send(flatBlocks.map(({ name }) => name));
+  } catch {
+    res
+      .status(500)
+      .type('txt')
+      .send('An error occured while processing your request');
+  }
+});
 
 app.get('/api/rides', async (req, res) => {
   try {
@@ -133,11 +142,11 @@ app.get('/api/rides', async (req, res) => {
         .type('txt')
         .send('Start and end location not provided');
     }
-  } catch (err) {
+  } catch {
     res
       .status(500)
       .type('txt')
-      .send(err.message);
+      .send('An error occured while processing your request');
   }
 });
 
