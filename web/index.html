@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      crossorigin="anonymous"
+    />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style>
+      .box {
+        max-width: 60%;
+        margin: auto;
+        padding: 2%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+      }
+      .mb-40 {
+        margin-bottom: 40px;
+      }
+      .align-center {
+        text-align: center;
+      }
+      .align-div-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .btn-dropDown {
+        border: 1px solid #d6d6d6;
+      }
+      .find-transport,
+      .find-transport:hover {
+        margin: auto;
+        background-color: #48a23f;
+        width: 35%;
+        color: white;
+        cursor: pointer;
+      }
+      .mainContainer {
+        margin-top: 17vh;
+      }
+      .careemLogo {
+        width: 85px;
+        margin-bottom: 20px;
+      }
+      .arrowImage {
+        width: 115px;
+        transform: rotate(60deg);
+        margin: 0 10px 0 5px;
+      }
+      .mode-of-transportation {
+        position: absolute;
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+      .route-defined {
+        font-size: 12px;
+      }
+      .arrow {
+        content: '\2192';
+      }
+      .routeStart {
+        font-weight: bold;
+        font-size: 16px;
+        color: #636363;
+        position: relative;
+        /* margin-top: 13px; */
+        top: 1px;
+      }
+      .route-wrapper {
+        color: #797979;
+      }
+      .suggested {
+        text-align: left;
+        font-size: 16px;
+        font-weight: 600;
+        color: #4a4a4a;
+      }
+      .route-outer {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        align-items: center;
+        margin: 10px 0 10px 0;
+      }
+      .hr {
+        width: 100%;
+        margin: 25px 0 25px 0;
+        border-bottom: 1px solid #c5c5c5;
+      }
+      .transport {
+        width: 50px;
+      }
+    </style>
+    <title>The Great Hack</title>
+  </head>
+  <body>
+    <main id="app" class="container mainContainer">
+      <div v-if="message" class="box">
+        <p class="text-center text-muted">
+          {{ message }}
+        </p>
+      </div>
+      <div v-else-if="loading" class="box text-center">
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <div v-else class="box align-center">
+        <div>
+          <img
+            src="https://storage.googleapis.com/dnnae/theGreatHAck/careem_logo.jpg?_ga=2.113576847.-982559812.1562244686&_gac=1.217129700.1571833879.CjwKCAjw9L_tBRBXEiwAOWVVCQjycaxF73FDAPw9lg_cEoyj6cAKcXVpPYNl9GRGvemQvveFN9ZP7xoCqOYQAvD_BwE"
+            alt="Logo careem"
+            class="careemLogo"
+          />
+        </div>
+        <div class="row">
+          <span class="col-sm-6 mb-40">Please Choose a pickup point: </span>
+          <div class="dropdown col-sm-6">
+            <button
+              type="button"
+              class="btn btn-dropDown dropdown-toggle"
+              data-toggle="dropdown"
+            >
+              {{pickUpPoint}}
+            </button>
+            <div class="dropdown-menu" id="from">
+              <a
+                class="dropdown-item"
+                v-for="from in points"
+                v-on:click="pickLocation(from)"
+                >{{from}}</a
+              >
+            </div>
+          </div>
+          <span class="col-sm-6 mb-40">Please Choose a Drop off point: </span>
+          <div class="dropdown col-sm-6">
+            <button
+              type="button"
+              class="btn btn-dropDown dropdown-toggle"
+              data-toggle="dropdown"
+            >
+              {{destinationPoint}}
+            </button>
+            <div class="dropdown-menu" id="from">
+              <a
+                class="dropdown-item"
+                v-for="to in points"
+                v-on:click="dropLocation(to)"
+                >{{to}}</a
+              >
+            </div>
+          </div>
+          <button
+            type="button"
+            class="btn find-transport"
+            v-on:click="fetchData()"
+          >
+            Find Transport
+          </button>
+        </div>
+        <!-- 2nd screen after result -->
+        <div v-if="showSuggested">
+          <div class="hr"></div>
+          <div class="suggested">Suggested route</div>
+          <div class="align-div-center">
+            <div
+              class="route-outer"
+              v-for="(calcPoint,index) in calculatedArray"
+            >
+              <!-- <span>{{calcPoint.src}}</span> -->
+              <!-- <span class="mode-of-transportation"
+              >{{calcPoint.mode}} ({{calcPoint.distance}} km)</span
+            > -->
+              <!-- <img
+              class="arrowImage"
+              src="https://storage.googleapis.com/dnnae/theGreatHAck/arrow.png?_ga=2.88762003.-982559812.1562244686&_gac=1.192602968.1571833879.CjwKCAjw9L_tBRBXEiwAOWVVCQjycaxF73FDAPw9lg_cEoyj6cAKcXVpPYNl9GRGvemQvveFN9ZP7xoCqOYQAvD_BwE"
+              alt="arrow"
+            /> -->
+              <!-- <span class="arrow">&#8594;</span> -->
+              <img
+                class="transport"
+                src="https://res.cloudinary.com/dckccn5ab/image/upload/v1575181878/samples/trolleybus-facing-right_j3jdhj.png"
+                alt="bus_img"
+                v-if="calcPoint.mode==='bus'"
+              />
+              <img
+                class="transport"
+                src="https://res.cloudinary.com/dckccn5ab/image/upload/v1575182249/samples/transportation-12-512_c59wcg.png"
+                alt="van_img"
+                v-if="calcPoint.mode==='van'"
+              />
+              <img
+                class="transport"
+                src="https://res.cloudinary.com/dckccn5ab/image/upload/v1575181878/samples/sedan_zasuz6.png"
+                alt="car_img"
+                v-if="calcPoint.mode==='taxi'"
+              />
+              <img
+                class="transport"
+                src="https://res.cloudinary.com/dckccn5ab/image/upload/v1575182142/samples/tuk-tuk-rickshaw-pngrepo-com_v0hnxj.png"
+                alt="rikshaw_img"
+                v-if="calcPoint.mode==='riskshaw'"
+              />
+              <img
+                class="transport"
+                src="https://res.cloudinary.com/dckccn5ab/image/upload/v1575182527/samples/images_gltthe.png"
+                alt="rikshaw_img"
+                v-if="calcPoint.mode==='bike'"
+              />
+              <!-- <span v-if="index == calcPoint.length-1">{{calcPoint.dest}}</span> -->
+              <div class="route-wrapper">
+                <span v-for="(route,index1) in calcPoint.routes">
+                  <span class="route-defined">
+                    <span
+                      :class="{ 'routeStart': (index1 === 0 || index1 === calcPoint.routes.length - 1)}"
+                      >{{route}}</span
+                    >
+                    <span v-if="index1 !== calcPoint.routes.length-1"> > </span>
+                  </span>
+                </span>
+              </div>
+              <!-- <span>{{calcPoint.dest}}</span> -->
+              <span>({{calcPoint.distance}} km)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="text-center py-3">
+        © 2019 Copyright:
+        <a href="" target="_blank">The Great Hack</a>
+      </div>
+    </footer>
+    <noscript>Please enable Javascript to view this content</noscript>
+    <script>
+        console.log('asdas');
+            const token = new URL(location).searchParams.get('token');
+            const app = new Vue({
+              el: '#app',
+              data: {
+                loading: false,
+                message: null,
+                pickUpPoint: 'A',
+                destinationPoint: 'Y',
+                showSuggested: false,
+                points: [],
+                calculatedArray: [],
+                // points: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y']
+              },
+              methods: {
+                init() {
+                  this.fetchLocations();
+                  // if (!token) {
+                  //   this.message = 'No valid token found';
+                  // } else {
+                  //   setTimeout(this.verify, 2000);
+                  // }
+                },
+                pickLocation(valueSelected) {
+                  console.log(valueSelected);
+                  this.pickUpPoint = valueSelected;
+                },
+                dropLocation(valueSelected) {
+                  console.log(valueSelected);
+                  this.destinationPoint = valueSelected;
+                },
+                fetchLocations() {
+                  const url = 'http://localhost:3000/api/locations';
+                  fetch(url, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  })
+                    .then(res => {
+                      console.log(res);
+                      if (res.status === 201) {
+                        this.success = true;
+                        // this.points= res.body;
+                      } else {
+                        res
+                          .json()
+                          .then(result => {
+                            console.log(result);
+                            this.points = result;
+                          })
+                          .catch(() => {
+                            this.message =
+                              'There was a problem while resetting your password';
+                          });
+                      }
+                    })
+                    .catch(err => {
+                      this.message = err.message;
+                    })
+                    .then(() => {
+                      this.submitting = false;
+                    });
+                },
+                fetchData() {
+                  let url =
+                    'http://localhost:3000/api/rides?start=' +
+                    this.pickUpPoint +
+                    '&end=' +
+                    this.destinationPoint;
+      ​
+                  fetch(url, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  })
+                    .then(res => {
+                      console.log(res);
+                      if (res.status === 201) {
+                        this.success = true;
+                      } else {
+                        res
+                          .json()
+                          .then(result => {
+                            console.log(result);
+                            this.calculatedArray = result;
+                            this.showSuggested=true;
+                            //  this.points=result;
+                          })
+                          .catch(() => {
+                            this.message =
+                              'There was a problem while resetting your password';
+                          });
+                      }
+                    })
+                    .catch(err => {
+                      this.message = err.message;
+                    })
+                    .then(() => {
+                      this.submitting = false;
+                    });
+                },
+                verify() {
+                  this.loading = false;
+                },
+              },
+            });
+            app.init();
+    </script>
+  </body>
+</html>

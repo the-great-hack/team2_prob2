@@ -6,6 +6,7 @@
       {
         "root": ["./", "./"]
       }
-    ]
+    ],
+    ["inline-json-import", {}]
   ]
 }
