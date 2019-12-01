@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npm-run-all clean compile",
     "clean": "rimraf dist",
-    "compile": "babel . --only main.js,src,data --out-dir dist",
+    "compile": "babel . --only main.js,src,data,web --out-dir dist",
     "lint": "eslint main.js src",
     "start": "cross-env NODE_ENV=production node dist/main.js",
     "start:dev": "cross-env NODE_ENV=development nodemon --exec babel-node main.js",
