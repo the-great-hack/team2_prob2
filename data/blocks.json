@@ -2,31 +2,31 @@
   [
     {
       "name": "A",
-      "stats": { "carCount": 10, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 1, "lanes": 3, "busAllowed": true },
       "lat": 0,
       "lng": 0
     },
     {
       "name": "B",
-      "stats": { "carCount": 12, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 1, "lanes": 3, "busAllowed": true },
       "lat": 0,
       "lng": 1
     },
     {
       "name": "C",
-      "stats": { "carCount": 14, "lanes": 3, "busAllowed": true },
+      "stats": { "carCount": 1, "lanes": 3, "busAllowed": true },
       "lat": 0,
       "lng": 2
     },
     {
       "name": "D",
-      "stats": { "carCount": 8, "lanes": 2, "busAllowed": true },
+      "stats": { "carCount": 1, "lanes": 3, "busAllowed": true },
       "lat": 0,
       "lng": 3
     },
     {
       "name": "E",
-      "stats": { "carCount": 12, "lanes": 2, "busAllowed": true },
+      "stats": { "carCount": 1, "lanes": 3, "busAllowed": true },
       "lat": 0,
       "lng": 4
     }

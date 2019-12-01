@@ -9,7 +9,7 @@ import Graph from 'src/algorithms/dijkstra';
 import { calculateViscosity } from 'src/utils';
 
 // load data from sources
-import blocks from 'data/blocks.json';
+import blocksData from 'data/blocks.json';
 import transports from 'data/transports.json';
 
 const port = process.env.PORT || 3000;
@@ -17,29 +17,32 @@ const app = express();
 app.disable('x-powered-by');
 app.use(cors());
 
+// transform data and calculate route viscosity
+const blocks = blocksData.map(val1 =>
+  val1.map(val2 => ({
+    ...val2,
+    viscosity: calculateViscosity(
+      transports,
+      val2.stats.lanes,
+      val2.stats.carCount,
+      val2.stats.busAllowed
+    ),
+  }))
+);
+
 const graph = new Graph();
 const flatBlocks = blocks.flatMap(b => b);
 
-// transform data and feed it to the graph service
+// feed data to the graph service
 for (let i = 0, len = blocks[0].length; i < flatBlocks.length; i += 1) {
   const obj = {};
 
   if (flatBlocks[i + 1] && (i + 1) % len !== 0) {
-    obj[flatBlocks[i + 1].name] = calculateViscosity(
-      transports,
-      flatBlocks[i].lanes,
-      flatBlocks[i].stats.carCount,
-      flatBlocks[i].stats.busAllowed
-    );
+    obj[flatBlocks[i + 1].name] = flatBlocks[i].viscosity;
   }
 
   if (flatBlocks[i + len]) {
-    obj[flatBlocks[i + len].name] = calculateViscosity(
-      transports,
-      flatBlocks[i].lanes,
-      flatBlocks[i].stats.carCount,
-      flatBlocks[i].stats.busAllowed
-    );
+    obj[flatBlocks[i + len].name] = flatBlocks[i].viscosity;
   }
 
   graph.addVertex(flatBlocks[i].name, obj);
